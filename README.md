@@ -1,5 +1,13 @@
 # WhatsApp API Client PHP
 
+[![Latest Stable Version](https://poser.pugx.org/sdkwa/whatsapp-api-client-php/v/stable)](https://packagist.org/packages/sdkwa/whatsapp-api-client-php)
+[![Total Downloads](https://poser.pugx.org/sdkwa/whatsapp-api-client-php/downloads)](https://packagist.org/packages/sdkwa/whatsapp-api-client-php)
+[![License](https://poser.pugx.org/sdkwa/whatsapp-api-client-php/license)](https://packagist.org/packages/sdkwa/whatsapp-api-client-php)
+[![CI/CD Pipeline](https://github.com/sdkwa/whatsapp-api-client-php/actions/workflows/ci.yml/badge.svg)](https://github.com/sdkwa/whatsapp-api-client-php/actions/workflows/ci.yml)
+[![PHP Version](https://img.shields.io/badge/php-%3E%3D7.4-8892BF.svg)](https://php.net/)
+[![PHPStan](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg)](https://phpstan.org/)
+[![PSR-12](https://img.shields.io/badge/code%20style-PSR--12-blue.svg)](https://www.php-fig.org/psr/psr-12/)
+
 PHP SDK for SDKWA WhatsApp HTTP API
 
 ## Installation
