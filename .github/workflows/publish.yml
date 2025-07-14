@@ -1,0 +1,91 @@
+name: Publish to Packagist
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      force_publish:
+        description: 'Force publish to Packagist'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish to Packagist
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: json, curl
+        
+    - name: Validate composer.json
+      run: composer validate --strict
+      
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-dev --optimize-autoloader
+      
+    - name: Run tests
+      run: |
+        composer install --prefer-dist --no-progress
+        vendor/bin/phpunit
+        
+    - name: Create release archive
+      run: |
+        mkdir -p dist
+        rsync -av --progress \
+          --exclude='dist' \
+          --exclude='.git' \
+          --exclude='.github' \
+          --exclude='tests' \
+          --exclude='phpunit.xml' \
+          --exclude='phpcs.xml' \
+          --exclude='phpstan.neon' \
+          --exclude='.gitignore' \
+          --exclude='setup.php' \
+          --exclude='CONTRIBUTING.md' \
+          --exclude='.env.example' \
+          . dist/
+          
+    - name: Update Packagist
+      run: |
+        if [ "${{ github.event_name }}" = "release" ] || [ "${{ github.event.inputs.force_publish }}" = "true" ]; then
+          curl -XPOST -H'content-type:application/json' \
+            "https://packagist.org/api/update-package?username=${{ secrets.PACKAGIST_USERNAME }}&apiToken=${{ secrets.PACKAGIST_TOKEN }}" \
+            -d'{"repository":{"url":"https://github.com/sdkwa/whatsapp-api-client-php"}}'
+        fi
+        
+    - name: Create GitHub Release Assets
+      if: github.event_name == 'release'
+      run: |
+        cd dist
+        tar -czf ../whatsapp-api-client-php-${{ github.event.release.tag_name }}.tar.gz .
+        zip -r ../whatsapp-api-client-php-${{ github.event.release.tag_name }}.zip .
+        
+    - name: Upload Release Assets
+      if: github.event_name == 'release'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          whatsapp-api-client-php-${{ github.event.release.tag_name }}.tar.gz
+          whatsapp-api-client-php-${{ github.event.release.tag_name }}.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Notify Discord (optional)
+      if: github.event_name == 'release'
+      continue-on-error: true
+      run: |
+        if [ ! -z "${{ secrets.DISCORD_WEBHOOK }}" ]; then
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d "{\"content\": \"🚀 New release published: **${{ github.event.release.tag_name }}**\n\nWhatsApp API Client PHP is now available on Packagist!\n\n📦 Install: \`composer require sdkwa/whatsapp-api-client-php\`\n🔗 Release: ${{ github.event.release.html_url }}\"}" \
+            ${{ secrets.DISCORD_WEBHOOK }}
+        fi

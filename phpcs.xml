@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="SDKWA Coding Standard">
+    <description>The coding standard for SDKWA WhatsApp API Client PHP</description>
+    
+    <arg name="basepath" value="."/>
+    <arg name="cache" value=".phpcs-cache"/>
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="80"/>
+    <arg value="p"/>
+
+    <!-- What to scan -->
+    <file>src/</file>
+    <file>tests/</file>
+    
+    <!-- How to scan -->
+    <rule ref="PSR12"/>
+    
+    <!-- Exclude certain directories -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/build/*</exclude-pattern>
+</ruleset>

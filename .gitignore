@@ -1,0 +1,52 @@
+# Dependencies
+/vendor/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+/build/
+/dist/
+
+# Coverage
+coverage.xml
+*.coverage
+.coverage
+
+# Logs
+*.log
+logs/
+
+# Cache
+.phpcs-cache
+.phpunit.result.cache
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Examples output
+examples/qr_code.png
+
+# Temporary files
+*.tmp
+*.temp
+
+# Composer
+composer.phar
+composer.lock
+
+# PHPUnit
+.phpunit.result.cache
+
+# PHPStan
+.phpstan.result.cache

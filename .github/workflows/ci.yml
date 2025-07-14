@@ -1,0 +1,110 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  release:
+    types: [ published ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ['7.4', '8.0', '8.1', '8.2', '8.3']
+        
+    name: PHP ${{ matrix.php-version }} Tests
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: json, curl
+        coverage: xdebug
+        
+    - name: Validate composer.json
+      run: composer validate --strict
+      
+    - name: Cache Composer dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.composer/cache/files
+        key: dependencies-composer-${{ hashFiles('composer.json') }}
+        restore-keys: dependencies-composer-
+        
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+      
+    - name: Run PHPStan
+      run: vendor/bin/phpstan analyse --no-progress
+      
+    - name: Run PHPCS
+      run: vendor/bin/phpcs --standard=PSR12 src/ tests/
+      
+    - name: Run PHPUnit
+      run: vendor/bin/phpunit --coverage-clover=coverage.xml
+      
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: true
+
+  security:
+    runs-on: ubuntu-latest
+    name: Security Analysis
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: json, curl
+        
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+      
+    - name: Run security check
+      run: composer audit
+
+  publish:
+    needs: [test, security]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.event.action == 'published'
+    
+    name: Publish to Packagist
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: json, curl
+        
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-dev --optimize-autoloader
+      
+    - name: Create package
+      run: |
+        mkdir -p dist
+        rsync -av --exclude='dist' --exclude='.git' --exclude='tests' --exclude='.github' . dist/
+        
+    - name: Notify Packagist
+      run: |
+        curl -XPOST -H'content-type:application/json' \
+          "https://packagist.org/api/update-package?username=${{ secrets.PACKAGIST_USERNAME }}&apiToken=${{ secrets.PACKAGIST_TOKEN }}" \
+          -d'{"repository":{"url":"https://packagist.org/packages/sdkwa/whatsapp-api-client-php"}}'
