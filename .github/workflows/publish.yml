@@ -78,14 +78,3 @@ jobs:
           whatsapp-api-client-php-${{ github.event.release.tag_name }}.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Notify Discord (optional)
-      if: github.event_name == 'release'
-      continue-on-error: true
-      run: |
-        if [ ! -z "${{ secrets.DISCORD_WEBHOOK }}" ]; then
-          curl -H "Content-Type: application/json" \
-            -X POST \
-            -d "{\"content\": \"🚀 New release published: **${{ github.event.release.tag_name }}**\n\nWhatsApp API Client PHP is now available on Packagist!\n\n📦 Install: \`composer require sdkwa/whatsapp-api-client-php\`\n🔗 Release: ${{ github.event.release.html_url }}\"}" \
-            ${{ secrets.DISCORD_WEBHOOK }}
-        fi
