@@ -61,20 +61,3 @@ jobs:
             "https://packagist.org/api/update-package?username=${{ secrets.PACKAGIST_USERNAME }}&apiToken=${{ secrets.PACKAGIST_TOKEN }}" \
             -d'{"repository":{"url":"https://github.com/sdkwa/whatsapp-api-client-php"}}'
         fi
-        
-    - name: Create GitHub Release Assets
-      if: github.event_name == 'release'
-      run: |
-        cd dist
-        tar -czf ../whatsapp-api-client-php-${{ github.event.release.tag_name }}.tar.gz .
-        zip -r ../whatsapp-api-client-php-${{ github.event.release.tag_name }}.zip .
-        
-    - name: Upload Release Assets
-      if: github.event_name == 'release'
-      uses: softprops/action-gh-release@v1
-      with:
-        files: |
-          whatsapp-api-client-php-${{ github.event.release.tag_name }}.tar.gz
-          whatsapp-api-client-php-${{ github.event.release.tag_name }}.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
