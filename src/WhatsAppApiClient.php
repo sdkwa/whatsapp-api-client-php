@@ -19,6 +19,9 @@ class WhatsAppApiClient
     private ?string $userId;
     private ?string $userToken;
     private string $basePath;
+    /**
+     * @var array<string, string>
+     */
     private array $headers;
     private Client $httpClient;
     private WebhookHandler $webhookHandler;
@@ -26,7 +29,7 @@ class WhatsAppApiClient
     /**
      * Constructor
      *
-     * @param array $options Configuration options
+     * @param array<string, mixed> $options Configuration options
      * @throws WhatsAppApiException
      */
     public function __construct(array $options)
@@ -57,7 +60,7 @@ class WhatsAppApiClient
     /**
      * Validate constructor options
      *
-     * @param array $options
+     * @param array<string, mixed> $options
      * @throws WhatsAppApiException
      */
     private function validateOptions(array $options): void
@@ -76,8 +79,8 @@ class WhatsAppApiClient
      *
      * @param string $method
      * @param string $path
-     * @param array $options
-     * @return array
+     * @param array<string, mixed> $options
+     * @return array<string, mixed><string, mixed>
      * @throws WhatsAppApiException
      */
     private function request(string $method, string $path, array $options = []): array
@@ -140,7 +143,7 @@ class WhatsAppApiClient
     /**
      * Get current account settings
      *
-     * @return array
+     * @return array<string, mixed><string, mixed>
      * @throws WhatsAppApiException
      */
     public function getSettings(): array
@@ -151,8 +154,8 @@ class WhatsAppApiClient
     /**
      * Set account settings
      *
-     * @param array $settings
-     * @return array
+     * @param array<string, mixed> $settings
+     * @return array<string, mixed><string, mixed>
      * @throws WhatsAppApiException
      */
     public function setSettings(array $settings): array
@@ -165,7 +168,7 @@ class WhatsAppApiClient
     /**
      * Get account state
      *
-     * @return array
+     * @return array<string, mixed><string, mixed>
      * @throws WhatsAppApiException
      */
     public function getStateInstance(): array
@@ -176,7 +179,7 @@ class WhatsAppApiClient
     /**
      * Get warming phone status
      *
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function getWarmingPhoneStatus(): array
@@ -187,7 +190,7 @@ class WhatsAppApiClient
     /**
      * Reboot account
      *
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function reboot(): array
@@ -198,7 +201,7 @@ class WhatsAppApiClient
     /**
      * Logout account
      *
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function logout(): array
@@ -209,7 +212,7 @@ class WhatsAppApiClient
     /**
      * Get QR code for account authorization
      *
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function getQr(): array
@@ -220,8 +223,8 @@ class WhatsAppApiClient
     /**
      * Get authorization code for account authorization
      *
-     * @param array $params
-     * @return array
+     * @param array<string, mixed> $params
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function getAuthorizationCode(array $params): array
@@ -234,8 +237,8 @@ class WhatsAppApiClient
     /**
      * Request registration code
      *
-     * @param array $params
-     * @return array
+     * @param array<string, mixed> $params
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function requestRegistrationCode(array $params): array
@@ -248,8 +251,8 @@ class WhatsAppApiClient
     /**
      * Send registration code
      *
-     * @param array $params
-     * @return array
+     * @param array<string, mixed> $params
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function sendRegistrationCode(array $params): array
@@ -264,8 +267,8 @@ class WhatsAppApiClient
     /**
      * Send message
      *
-     * @param array $params
-     * @return array
+     * @param array<string, mixed> $params
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function sendMessage(array $params): array
@@ -278,8 +281,8 @@ class WhatsAppApiClient
     /**
      * Send contact
      *
-     * @param array $params
-     * @return array
+     * @param array<string, mixed> $params
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function sendContact(array $params): array
@@ -292,8 +295,8 @@ class WhatsAppApiClient
     /**
      * Send file by upload
      *
-     * @param array $params
-     * @return array
+     * @param array<string, mixed> $params
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function sendFileByUpload(array $params): array
@@ -344,8 +347,8 @@ class WhatsAppApiClient
     /**
      * Send file by URL
      *
-     * @param array $params
-     * @return array
+     * @param array<string, mixed> $params
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function sendFileByUrl(array $params): array
@@ -358,8 +361,8 @@ class WhatsAppApiClient
     /**
      * Send location
      *
-     * @param array $params
-     * @return array
+     * @param array<string, mixed> $params
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function sendLocation(array $params): array
@@ -373,7 +376,7 @@ class WhatsAppApiClient
      * Upload file
      *
      * @param mixed $file
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function uploadFile($file): array
@@ -404,8 +407,8 @@ class WhatsAppApiClient
     /**
      * Get chat history
      *
-     * @param array $params
-     * @return array
+     * @param array<string, mixed> $params
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function getChatHistory(array $params): array
@@ -420,7 +423,7 @@ class WhatsAppApiClient
     /**
      * Receive notification
      *
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function receiveNotification(): array
@@ -432,7 +435,7 @@ class WhatsAppApiClient
      * Delete notification
      *
      * @param int $receiptId
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function deleteNotification(int $receiptId): array
@@ -445,7 +448,7 @@ class WhatsAppApiClient
     /**
      * Get contacts
      *
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function getContacts(): array
@@ -456,7 +459,7 @@ class WhatsAppApiClient
     /**
      * Get chats
      *
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function getChats(): array
@@ -468,7 +471,7 @@ class WhatsAppApiClient
      * Get contact information
      *
      * @param string $chatId
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function getContactInfo(string $chatId): array
@@ -482,7 +485,7 @@ class WhatsAppApiClient
      * Set profile picture
      *
      * @param mixed $file
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function setProfilePicture($file): array
@@ -514,7 +517,7 @@ class WhatsAppApiClient
      * Set profile name
      *
      * @param string $name
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function setProfileName(string $name): array
@@ -528,7 +531,7 @@ class WhatsAppApiClient
      * Set profile status
      *
      * @param string $status
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function setProfileStatus(string $status): array
@@ -542,7 +545,7 @@ class WhatsAppApiClient
      * Get avatar
      *
      * @param string $chatId
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function getAvatar(string $chatId): array
@@ -556,7 +559,7 @@ class WhatsAppApiClient
      * Check WhatsApp account availability
      *
      * @param int $phoneNumber
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function checkWhatsapp(int $phoneNumber): array
@@ -573,7 +576,7 @@ class WhatsAppApiClient
      *
      * @param string $groupId
      * @param string $groupName
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function updateGroupName(string $groupId, string $groupName): array
@@ -587,7 +590,7 @@ class WhatsAppApiClient
      * Get group chat data
      *
      * @param string $groupId
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function getGroupData(string $groupId): array
@@ -601,7 +604,7 @@ class WhatsAppApiClient
      * Leave group chat
      *
      * @param string $groupId
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function leaveGroup(string $groupId): array
@@ -616,7 +619,7 @@ class WhatsAppApiClient
      *
      * @param string $groupId
      * @param string $participantChatId
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function setGroupAdmin(string $groupId, string $participantChatId): array
@@ -631,7 +634,7 @@ class WhatsAppApiClient
      *
      * @param string $groupId
      * @param string $participantChatId
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function removeGroupParticipant(string $groupId, string $participantChatId): array
@@ -646,7 +649,7 @@ class WhatsAppApiClient
      *
      * @param string $groupId
      * @param string $participantChatId
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function removeAdmin(string $groupId, string $participantChatId): array
@@ -660,8 +663,8 @@ class WhatsAppApiClient
      * Create group chat
      *
      * @param string $groupName
-     * @param array $chatIds
-     * @return array
+     * @param array<string> $chatIds
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function createGroup(string $groupName, array $chatIds): array
@@ -676,7 +679,7 @@ class WhatsAppApiClient
      *
      * @param string $groupId
      * @param string $participantChatId
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function addGroupParticipant(string $groupId, string $participantChatId): array
@@ -691,7 +694,7 @@ class WhatsAppApiClient
      *
      * @param string $groupId
      * @param mixed $file
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function setGroupPicture(string $groupId, $file): array
@@ -729,8 +732,8 @@ class WhatsAppApiClient
     /**
      * Mark chat messages as read
      *
-     * @param array $params
-     * @return array
+     * @param array<string, mixed> $params
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function readChat(array $params): array
@@ -746,7 +749,7 @@ class WhatsAppApiClient
      * Archive chat
      *
      * @param string $chatId
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function archiveChat(string $chatId): array
@@ -760,7 +763,7 @@ class WhatsAppApiClient
      * Unarchive chat
      *
      * @param string $chatId
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function unarchiveChat(string $chatId): array
@@ -777,7 +780,7 @@ class WhatsAppApiClient
      *
      * @param string $chatId
      * @param string $idMessage
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function deleteMessage(string $chatId, string $idMessage): array
@@ -792,7 +795,7 @@ class WhatsAppApiClient
     /**
      * Clear messages queue
      *
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function clearMessagesQueue(): array
@@ -803,7 +806,7 @@ class WhatsAppApiClient
     /**
      * Show messages queue
      *
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function showMessagesQueue(): array
@@ -816,7 +819,7 @@ class WhatsAppApiClient
     /**
      * Get user account instances
      *
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function getInstances(): array
@@ -837,7 +840,7 @@ class WhatsAppApiClient
      * @param string $tariff
      * @param string $period
      * @param string|null $paymentType
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function createInstance(string $tariff, string $period, ?string $paymentType = null): array
@@ -865,7 +868,7 @@ class WhatsAppApiClient
      * @param string $tariff
      * @param string $period
      * @param string|null $paymentType
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function extendInstance(int $idInstance, string $tariff, string $period, ?string $paymentType = null): array
@@ -890,7 +893,7 @@ class WhatsAppApiClient
      * Delete user instance
      *
      * @param int $idInstance
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function deleteInstance(int $idInstance): array
@@ -910,7 +913,7 @@ class WhatsAppApiClient
      * Restore user instance
      *
      * @param int $idInstance
-     * @return array
+     * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
     public function restoreInstance(int $idInstance): array

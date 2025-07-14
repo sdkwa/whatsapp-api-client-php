@@ -3,8 +3,6 @@ parameters:
     paths:
         - src
     tmpDir: build/cache
-    ignoreErrors:
-        - '#Call to an undefined method#'
-    excludes_analyse:
+    excludePaths:
         - %rootDir%/../../../vendor
         - %rootDir%/../../../build

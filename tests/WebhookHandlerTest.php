@@ -17,7 +17,7 @@ class WebhookHandlerTest extends TestCase
     public function testOnIncomingMessageText(): void
     {
         $called = false;
-        $this->handler->onIncomingMessageText(function($data) use (&$called) {
+        $this->handler->onIncomingMessageText(function ($data) use (&$called) {
             $called = true;
             $this->assertEquals('Hello', $data['messageData']['textMessageData']['textMessage']);
         });
@@ -39,7 +39,7 @@ class WebhookHandlerTest extends TestCase
     public function testOnOutgoingMessageStatus(): void
     {
         $called = false;
-        $this->handler->onOutgoingMessageStatus(function($data) use (&$called) {
+        $this->handler->onOutgoingMessageStatus(function ($data) use (&$called) {
             $called = true;
             $this->assertEquals('sent', $data['status']);
         });
@@ -56,7 +56,7 @@ class WebhookHandlerTest extends TestCase
     public function testOnStateInstance(): void
     {
         $called = false;
-        $this->handler->onStateInstance(function($data) use (&$called) {
+        $this->handler->onStateInstance(function ($data) use (&$called) {
             $called = true;
             $this->assertEquals('authorized', $data['stateInstance']);
         });
@@ -73,9 +73,12 @@ class WebhookHandlerTest extends TestCase
     public function testMethodChaining(): void
     {
         $result = $this->handler
-            ->onIncomingMessageText(function($data) {})
-            ->onOutgoingMessageStatus(function($data) {})
-            ->onStateInstance(function($data) {});
+            ->onIncomingMessageText(function ($data) {
+            })
+            ->onOutgoingMessageStatus(function ($data) {
+            })
+            ->onStateInstance(function ($data) {
+            });
 
         $this->assertInstanceOf(WebhookHandler::class, $result);
     }
@@ -83,7 +86,7 @@ class WebhookHandlerTest extends TestCase
     public function testUnknownWebhookType(): void
     {
         $called = false;
-        $this->handler->onIncomingMessageText(function($data) use (&$called) {
+        $this->handler->onIncomingMessageText(function ($data) use (&$called) {
             $called = true;
         });
 
@@ -98,7 +101,7 @@ class WebhookHandlerTest extends TestCase
     public function testInvalidWebhookData(): void
     {
         $called = false;
-        $this->handler->onIncomingMessageText(function($data) use (&$called) {
+        $this->handler->onIncomingMessageText(function ($data) use (&$called) {
             $called = true;
         });
 
@@ -111,7 +114,7 @@ class WebhookHandlerTest extends TestCase
     public function testFileMessageHandler(): void
     {
         $called = false;
-        $this->handler->onIncomingMessageFile(function($data) use (&$called) {
+        $this->handler->onIncomingMessageFile(function ($data) use (&$called) {
             $called = true;
             $this->assertEquals('image.jpg', $data['messageData']['fileMessageData']['fileName']);
         });
@@ -134,7 +137,7 @@ class WebhookHandlerTest extends TestCase
     public function testLocationMessageHandler(): void
     {
         $called = false;
-        $this->handler->onIncomingMessageLocation(function($data) use (&$called) {
+        $this->handler->onIncomingMessageLocation(function ($data) use (&$called) {
             $called = true;
             $this->assertEquals('London', $data['messageData']['locationMessageData']['nameLocation']);
         });
@@ -158,7 +161,7 @@ class WebhookHandlerTest extends TestCase
     public function testContactMessageHandler(): void
     {
         $called = false;
-        $this->handler->onIncomingMessageContact(function($data) use (&$called) {
+        $this->handler->onIncomingMessageContact(function ($data) use (&$called) {
             $called = true;
             $this->assertEquals('John Doe', $data['messageData']['contactMessageData']['displayName']);
         });

@@ -7,6 +7,9 @@ namespace SDKWA;
  */
 class WebhookHandler
 {
+    /**
+     * @var array<string, callable>
+     */
     private array $callbacks = [];
 
     /**
@@ -108,7 +111,7 @@ class WebhookHandler
     /**
      * Process webhook data
      *
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return void
      */
     public function processWebhook(array $data): void
@@ -123,7 +126,7 @@ class WebhookHandler
     /**
      * Determine webhook type from data
      *
-     * @param array $data
+     * @param array<string, mixed> $data
      * @return string|null
      */
     private function determineWebhookType(array $data): ?string
@@ -145,7 +148,7 @@ class WebhookHandler
     /**
      * Handle webhook request (for use with web frameworks)
      *
-     * @param array $requestData
+     * @param array<string, mixed> $requestData
      * @return void
      */
     public function handleRequest(array $requestData): void

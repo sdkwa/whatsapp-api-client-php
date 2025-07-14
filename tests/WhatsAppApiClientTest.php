@@ -29,7 +29,7 @@ class WhatsAppApiClientTest extends TestCase
     {
         $this->expectException(WhatsAppApiException::class);
         $this->expectExceptionMessage('idInstance is required and must be a non-empty string');
-        
+
         $config = $this->config;
         unset($config['idInstance']);
         new WhatsAppApiClient($config);
@@ -39,7 +39,7 @@ class WhatsAppApiClientTest extends TestCase
     {
         $this->expectException(WhatsAppApiException::class);
         $this->expectExceptionMessage('apiTokenInstance is required and must be a non-empty string');
-        
+
         $config = $this->config;
         unset($config['apiTokenInstance']);
         new WhatsAppApiClient($config);
@@ -49,7 +49,7 @@ class WhatsAppApiClientTest extends TestCase
     {
         $this->expectException(WhatsAppApiException::class);
         $this->expectExceptionMessage('idInstance is required and must be a non-empty string');
-        
+
         $config = $this->config;
         $config['idInstance'] = '';
         new WhatsAppApiClient($config);
@@ -59,7 +59,7 @@ class WhatsAppApiClientTest extends TestCase
     {
         $this->expectException(WhatsAppApiException::class);
         $this->expectExceptionMessage('apiTokenInstance is required and must be a non-empty string');
-        
+
         $config = $this->config;
         $config['apiTokenInstance'] = '';
         new WhatsAppApiClient($config);
@@ -69,7 +69,7 @@ class WhatsAppApiClientTest extends TestCase
     {
         $client = new WhatsAppApiClient($this->config);
         $handler = $client->getWebhookHandler();
-        
+
         $this->assertInstanceOf(\SDKWA\WebhookHandler::class, $handler);
     }
 
@@ -77,7 +77,7 @@ class WhatsAppApiClientTest extends TestCase
     {
         $config = $this->config;
         unset($config['apiHost']);
-        
+
         $client = new WhatsAppApiClient($config);
         $this->assertInstanceOf(WhatsAppApiClient::class, $client);
     }
@@ -85,10 +85,10 @@ class WhatsAppApiClientTest extends TestCase
     public function testUserCredentialsForInstanceManagement(): void
     {
         $client = new WhatsAppApiClient($this->config);
-        
+
         $this->expectException(WhatsAppApiException::class);
         $this->expectExceptionMessage('userId and userToken are required for instance management operations');
-        
+
         $client->getInstances();
     }
 
@@ -97,7 +97,7 @@ class WhatsAppApiClientTest extends TestCase
         $config = $this->config;
         $config['userId'] = 'test_user';
         $config['userToken'] = 'test_user_token';
-        
+
         $client = new WhatsAppApiClient($config);
         $this->assertInstanceOf(WhatsAppApiClient::class, $client);
     }
