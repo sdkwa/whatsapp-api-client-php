@@ -18,11 +18,11 @@ try {
         'apiTokenInstance' => $apiTokenInstance
     ]);
 
-    // Send a simple text message
+    // Send a simple text message to WhatsApp
     $response = $client->sendMessage([
         'chatId' => '79999999999@c.us', // Replace with actual chat ID
         'message' => 'Hello from PHP SDK! 👋'
-    ]);
+    ], 'whatsapp');
 
     echo "Message sent successfully!" . PHP_EOL;
     echo "Message ID: " . $response['idMessage'] . PHP_EOL;
@@ -32,11 +32,10 @@ try {
         'chatId' => '79999999999@c.us',
         'message' => 'This is a quoted message',
         'quotedMessageId' => 'some_message_id' // Optional
-    ]);
+    ], 'whatsapp');
 
     echo "Quoted message sent!" . PHP_EOL;
     echo "Message ID: " . $response['idMessage'] . PHP_EOL;
-
 } catch (WhatsAppApiException $e) {
     echo "WhatsApp API Error: " . $e->getMessage() . PHP_EOL;
     echo "Status Code: " . $e->getStatusCode() . PHP_EOL;

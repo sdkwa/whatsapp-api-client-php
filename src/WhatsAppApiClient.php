@@ -18,7 +18,6 @@ class WhatsAppApiClient
     private string $apiTokenInstance;
     private ?string $userId;
     private ?string $userToken;
-    private string $basePath;
     /**
      * @var array<string, string>
      */
@@ -41,7 +40,6 @@ class WhatsAppApiClient
         $this->apiTokenInstance = $options['apiTokenInstance'];
         $this->userId = $options['userId'] ?? null;
         $this->userToken = $options['userToken'] ?? null;
-        $this->basePath = "/whatsapp/{$this->idInstance}";
         $this->headers = [
             'Authorization' => "Bearer {$this->apiTokenInstance}",
             'Content-Type' => 'application/json',
@@ -80,11 +78,15 @@ class WhatsAppApiClient
      * @param string $method
      * @param string $path
      * @param array<string, mixed> $options
+     * @param string $messengerType Messenger type: 'whatsapp' or 'telegram'
      * @return array<string, mixed><string, mixed>
      * @throws WhatsAppApiException
      */
-    private function request(string $method, string $path, array $options = []): array
+    private function request(string $method, string $path, array $options = [], string $messengerType = 'whatsapp'): array
     {
+        // Build the full path with messenger type
+        $fullPath = "/{$messengerType}/{$this->idInstance}{$path}";
+
         $config = [
             'headers' => array_merge($this->headers, $options['headers'] ?? [])
         ];
@@ -103,7 +105,7 @@ class WhatsAppApiClient
         }
 
         try {
-            $response = $this->httpClient->request($method, $path, $config);
+            $response = $this->httpClient->request($method, $fullPath, $config);
             $body = $response->getBody()->getContents();
             $data = json_decode($body, true);
 
@@ -146,9 +148,9 @@ class WhatsAppApiClient
      * @return array<string, mixed><string, mixed>
      * @throws WhatsAppApiException
      */
-    public function getSettings(): array
+    public function getSettings(string $messengerType = 'whatsapp'): array
     {
-        return $this->request('GET', $this->basePath . '/getSettings');
+        return $this->request('GET', '/getSettings', [], $messengerType);
     }
 
     /**
@@ -158,11 +160,11 @@ class WhatsAppApiClient
      * @return array<string, mixed><string, mixed>
      * @throws WhatsAppApiException
      */
-    public function setSettings(array $settings): array
+    public function setSettings(array $settings, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/setSettings', [
+        return $this->request('POST', '/setSettings', [
             'json' => $settings
-        ]);
+        ], $messengerType);
     }
 
     /**
@@ -171,9 +173,9 @@ class WhatsAppApiClient
      * @return array<string, mixed><string, mixed>
      * @throws WhatsAppApiException
      */
-    public function getStateInstance(): array
+    public function getStateInstance(string $messengerType = 'whatsapp'): array
     {
-        return $this->request('GET', $this->basePath . '/getStateInstance');
+        return $this->request('GET', '/getStateInstance', [], $messengerType);
     }
 
     /**
@@ -182,9 +184,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function getWarmingPhoneStatus(): array
+    public function getWarmingPhoneStatus(string $messengerType = 'whatsapp'): array
     {
-        return $this->request('GET', $this->basePath . '/getWarmingPhoneStatus');
+        return $this->request('GET', '/getWarmingPhoneStatus', [], $messengerType);
     }
 
     /**
@@ -193,9 +195,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function reboot(): array
+    public function reboot(string $messengerType = 'whatsapp'): array
     {
-        return $this->request('GET', $this->basePath . '/reboot');
+        return $this->request('GET', '/reboot', [], $messengerType);
     }
 
     /**
@@ -204,9 +206,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function logout(): array
+    public function logout(string $messengerType = 'whatsapp'): array
     {
-        return $this->request('GET', $this->basePath . '/logout');
+        return $this->request('GET', '/logout', [], $messengerType);
     }
 
     /**
@@ -215,9 +217,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function getQr(): array
+    public function getQr(string $messengerType = 'whatsapp'): array
     {
-        return $this->request('GET', $this->basePath . '/qr');
+        return $this->request('GET', '/qr', [], $messengerType);
     }
 
     /**
@@ -227,11 +229,11 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function getAuthorizationCode(array $params): array
+    public function getAuthorizationCode(array $params, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/getAuthorizationCode', [
+        return $this->request('POST', '/getAuthorizationCode', [
             'json' => $params
-        ]);
+        ], $messengerType);
     }
 
     /**
@@ -241,11 +243,11 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function requestRegistrationCode(array $params): array
+    public function requestRegistrationCode(array $params, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/requestRegistrationCode', [
+        return $this->request('POST', '/requestRegistrationCode', [
             'json' => $params
-        ]);
+        ], $messengerType);
     }
 
     /**
@@ -255,11 +257,11 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function sendRegistrationCode(array $params): array
+    public function sendRegistrationCode(array $params, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/sendRegistrationCode', [
+        return $this->request('POST', '/sendRegistrationCode', [
             'json' => $params
-        ]);
+        ], $messengerType);
     }
 
     // --- Sending methods ---
@@ -271,11 +273,11 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function sendMessage(array $params): array
+    public function sendMessage(array $params, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/sendMessage', [
+        return $this->request('POST', '/sendMessage', [
             'json' => $params
-        ]);
+        ], $messengerType);
     }
 
     /**
@@ -285,11 +287,11 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function sendContact(array $params): array
+    public function sendContact(array $params, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/sendContact', [
+        return $this->request('POST', '/sendContact', [
             'json' => $params
-        ]);
+        ], $messengerType);
     }
 
     /**
@@ -299,7 +301,7 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function sendFileByUpload(array $params): array
+    public function sendFileByUpload(array $params, string $messengerType = 'whatsapp'): array
     {
         $multipart = [
             [
@@ -339,9 +341,9 @@ class WhatsAppApiClient
             ];
         }
 
-        return $this->request('POST', $this->basePath . '/sendFileByUpload', [
+        return $this->request('POST', '/sendFileByUpload', [
             'multipart' => $multipart
-        ]);
+        ], $messengerType);
     }
 
     /**
@@ -351,11 +353,11 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function sendFileByUrl(array $params): array
+    public function sendFileByUrl(array $params, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/sendFileByUrl', [
+        return $this->request('POST', '/sendFileByUrl', [
             'json' => $params
-        ]);
+        ], $messengerType);
     }
 
     /**
@@ -365,11 +367,11 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function sendLocation(array $params): array
+    public function sendLocation(array $params, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/sendLocation', [
+        return $this->request('POST', '/sendLocation', [
             'json' => $params
-        ]);
+        ], $messengerType);
     }
 
     /**
@@ -379,7 +381,7 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function uploadFile($file): array
+    public function uploadFile($file, string $messengerType = 'whatsapp'): array
     {
         $multipart = [];
 
@@ -399,9 +401,9 @@ class WhatsAppApiClient
             ];
         }
 
-        return $this->request('POST', $this->basePath . '/uploadFile', [
+        return $this->request('POST', '/uploadFile', [
             'multipart' => $multipart
-        ]);
+        ], $messengerType);
     }
 
     /**
@@ -411,11 +413,11 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function getChatHistory(array $params): array
+    public function getChatHistory(array $params, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/getChatHistory', [
+        return $this->request('POST', '/getChatHistory', [
             'json' => $params
-        ]);
+        ], $messengerType);
     }
 
     // --- Receiving methods ---
@@ -426,9 +428,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function receiveNotification(): array
+    public function receiveNotification(string $messengerType = 'whatsapp'): array
     {
-        return $this->request('GET', $this->basePath . '/receiveNotification');
+        return $this->request('GET', '/receiveNotification', [], $messengerType);
     }
 
     /**
@@ -438,9 +440,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function deleteNotification(int $receiptId): array
+    public function deleteNotification(int $receiptId, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('DELETE', $this->basePath . "/deleteNotification/{$receiptId}");
+        return $this->request('DELETE', "/deleteNotification/{$receiptId}");
     }
 
     // --- Chat/Contact methods ---
@@ -451,9 +453,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function getContacts(): array
+    public function getContacts(string $messengerType = 'whatsapp'): array
     {
-        return $this->request('GET', $this->basePath . '/getContacts');
+        return $this->request('GET', '/getContacts', [], $messengerType);
     }
 
     /**
@@ -462,9 +464,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function getChats(): array
+    public function getChats(string $messengerType = 'whatsapp'): array
     {
-        return $this->request('GET', $this->basePath . '/getChats');
+        return $this->request('GET', '/getChats', [], $messengerType);
     }
 
     /**
@@ -474,9 +476,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function getContactInfo(string $chatId): array
+    public function getContactInfo(string $chatId, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('GET', $this->basePath . '/getContactInfo', [
+        return $this->request('GET', '/getContactInfo', [
             'json' => ['chatId' => $chatId]
         ]);
     }
@@ -488,7 +490,7 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function setProfilePicture($file): array
+    public function setProfilePicture($file, string $messengerType = 'whatsapp'): array
     {
         $multipart = [];
 
@@ -508,9 +510,9 @@ class WhatsAppApiClient
             ];
         }
 
-        return $this->request('POST', $this->basePath . '/setProfilePicture', [
+        return $this->request('POST', '/setProfilePicture', [
             'multipart' => $multipart
-        ]);
+        ], $messengerType);
     }
 
     /**
@@ -520,9 +522,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function setProfileName(string $name): array
+    public function setProfileName(string $name, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/setProfileName', [
+        return $this->request('POST', '/setProfileName', [
             'json' => ['name' => $name]
         ]);
     }
@@ -534,9 +536,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function setProfileStatus(string $status): array
+    public function setProfileStatus(string $status, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/setProfileStatus', [
+        return $this->request('POST', '/setProfileStatus', [
             'json' => ['status' => $status]
         ]);
     }
@@ -548,9 +550,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function getAvatar(string $chatId): array
+    public function getAvatar(string $chatId, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/getAvatar', [
+        return $this->request('POST', '/getAvatar', [
             'json' => ['chatId' => $chatId]
         ]);
     }
@@ -562,9 +564,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function checkWhatsapp(int $phoneNumber): array
+    public function checkWhatsapp(int $phoneNumber, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/checkWhatsapp', [
+        return $this->request('POST', '/checkWhatsapp', [
             'json' => ['phoneNumber' => $phoneNumber]
         ]);
     }
@@ -579,9 +581,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function updateGroupName(string $groupId, string $groupName): array
+    public function updateGroupName(string $groupId, string $groupName, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/updateGroupName', [
+        return $this->request('POST', '/updateGroupName', [
             'json' => ['groupId' => $groupId, 'groupName' => $groupName]
         ]);
     }
@@ -593,9 +595,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function getGroupData(string $groupId): array
+    public function getGroupData(string $groupId, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/getGroupData', [
+        return $this->request('POST', '/getGroupData', [
             'json' => ['groupId' => $groupId]
         ]);
     }
@@ -607,9 +609,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function leaveGroup(string $groupId): array
+    public function leaveGroup(string $groupId, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/leaveGroup', [
+        return $this->request('POST', '/leaveGroup', [
             'json' => ['groupId' => $groupId]
         ]);
     }
@@ -622,9 +624,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function setGroupAdmin(string $groupId, string $participantChatId): array
+    public function setGroupAdmin(string $groupId, string $participantChatId, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/setGroupAdmin', [
+        return $this->request('POST', '/setGroupAdmin', [
             'json' => ['groupId' => $groupId, 'participantChatId' => $participantChatId]
         ]);
     }
@@ -637,9 +639,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function removeGroupParticipant(string $groupId, string $participantChatId): array
+    public function removeGroupParticipant(string $groupId, string $participantChatId, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/removeGroupParticipant', [
+        return $this->request('POST', '/removeGroupParticipant', [
             'json' => ['groupId' => $groupId, 'participantChatId' => $participantChatId]
         ]);
     }
@@ -652,9 +654,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function removeAdmin(string $groupId, string $participantChatId): array
+    public function removeAdmin(string $groupId, string $participantChatId, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/removeAdmin', [
+        return $this->request('POST', '/removeAdmin', [
             'json' => ['groupId' => $groupId, 'participantChatId' => $participantChatId]
         ]);
     }
@@ -667,9 +669,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function createGroup(string $groupName, array $chatIds): array
+    public function createGroup(string $groupName, array $chatIds, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/createGroup', [
+        return $this->request('POST', '/createGroup', [
             'json' => ['groupName' => $groupName, 'chatIds' => $chatIds]
         ]);
     }
@@ -682,9 +684,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function addGroupParticipant(string $groupId, string $participantChatId): array
+    public function addGroupParticipant(string $groupId, string $participantChatId, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/addGroupParticipant', [
+        return $this->request('POST', '/addGroupParticipant', [
             'json' => ['groupId' => $groupId, 'participantChatId' => $participantChatId]
         ]);
     }
@@ -697,7 +699,7 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function setGroupPicture(string $groupId, $file): array
+    public function setGroupPicture(string $groupId, $file, string $messengerType = 'whatsapp'): array
     {
         $multipart = [
             [
@@ -722,9 +724,9 @@ class WhatsAppApiClient
             ];
         }
 
-        return $this->request('POST', $this->basePath . '/setGroupPicture', [
+        return $this->request('POST', '/setGroupPicture', [
             'multipart' => $multipart
-        ]);
+        ], $messengerType);
     }
 
     // --- Read mark ---
@@ -736,11 +738,11 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function readChat(array $params): array
+    public function readChat(array $params, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/readChat', [
+        return $this->request('POST', '/readChat', [
             'json' => $params
-        ]);
+        ], $messengerType);
     }
 
     // --- Archive/Unarchive ---
@@ -752,9 +754,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function archiveChat(string $chatId): array
+    public function archiveChat(string $chatId, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/archiveChat', [
+        return $this->request('POST', '/archiveChat', [
             'json' => ['chatId' => $chatId]
         ]);
     }
@@ -766,9 +768,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function unarchiveChat(string $chatId): array
+    public function unarchiveChat(string $chatId, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/unarchiveChat', [
+        return $this->request('POST', '/unarchiveChat', [
             'json' => ['chatId' => $chatId]
         ]);
     }
@@ -783,9 +785,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function deleteMessage(string $chatId, string $idMessage): array
+    public function deleteMessage(string $chatId, string $idMessage, string $messengerType = 'whatsapp'): array
     {
-        return $this->request('POST', $this->basePath . '/deleteMessage', [
+        return $this->request('POST', '/deleteMessage', [
             'json' => ['chatId' => $chatId, 'idMessage' => $idMessage]
         ]);
     }
@@ -798,9 +800,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function clearMessagesQueue(): array
+    public function clearMessagesQueue(string $messengerType = 'whatsapp'): array
     {
-        return $this->request('GET', $this->basePath . '/clearMessagesQueue');
+        return $this->request('GET', '/clearMessagesQueue', [], $messengerType);
     }
 
     /**
@@ -809,9 +811,9 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function showMessagesQueue(): array
+    public function showMessagesQueue(string $messengerType = 'whatsapp'): array
     {
-        return $this->request('GET', $this->basePath . '/showMessagesQueue');
+        return $this->request('GET', '/showMessagesQueue', [], $messengerType);
     }
 
     // --- Instance Management (user-level) ---
@@ -822,7 +824,7 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function getInstances(): array
+    public function getInstances(string $messengerType = 'whatsapp'): array
     {
         $this->requireUserCredentials();
 
@@ -843,7 +845,7 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function createInstance(string $tariff, string $period, ?string $paymentType = null): array
+    public function createInstance(string $tariff, string $period, ?string $paymentType = null, string $messengerType = 'whatsapp'): array
     {
         $this->requireUserCredentials();
 
@@ -871,7 +873,7 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function extendInstance(int $idInstance, string $tariff, string $period, ?string $paymentType = null): array
+    public function extendInstance(int $idInstance, string $tariff, string $period, ?string $paymentType = null, string $messengerType = 'whatsapp'): array
     {
         $this->requireUserCredentials();
 
@@ -896,7 +898,7 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function deleteInstance(int $idInstance): array
+    public function deleteInstance(int $idInstance, string $messengerType = 'whatsapp'): array
     {
         $this->requireUserCredentials();
 
@@ -916,7 +918,7 @@ class WhatsAppApiClient
      * @return array<string, mixed>
      * @throws WhatsAppApiException
      */
-    public function restoreInstance(int $idInstance): array
+    public function restoreInstance(int $idInstance, string $messengerType = 'whatsapp'): array
     {
         $this->requireUserCredentials();
 

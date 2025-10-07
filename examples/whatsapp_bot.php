@@ -2,7 +2,7 @@
 
 /**
  * WhatsApp Bot Example
- * 
+ *
  * This example demonstrates how to create a comprehensive WhatsApp bot
  * that can handle various types of messages and commands.
  */
@@ -45,19 +45,19 @@ class WhatsAppBot
     {
         $handler = $this->client->getWebhookHandler();
 
-        $handler->onIncomingMessageText(function($data) {
+        $handler->onIncomingMessageText(function ($data) {
             $this->handleTextMessage($data);
         });
 
-        $handler->onIncomingMessageFile(function($data) {
+        $handler->onIncomingMessageFile(function ($data) {
             $this->handleFileMessage($data);
         });
 
-        $handler->onIncomingMessageLocation(function($data) {
+        $handler->onIncomingMessageLocation(function ($data) {
             $this->handleLocationMessage($data);
         });
 
-        $handler->onIncomingMessageContact(function($data) {
+        $handler->onIncomingMessageContact(function ($data) {
             $this->handleContactMessage($data);
         });
     }
@@ -88,11 +88,11 @@ class WhatsAppBot
 
         if (isset($this->commands[$command])) {
             $response = $this->commands[$command];
-            
+
             if (is_callable($response)) {
                 $response = $response($args);
             }
-            
+
             $this->sendMessage($chatId, $response);
         } else {
             $this->sendMessage($chatId, "Unknown command: {$command}\nType /help for available commands.");
@@ -349,7 +349,7 @@ if (php_sapi_name() === 'cli') {
 } else {
     // Running from web server - webhook mode
     header('Content-Type: application/json');
-    
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $bot = new WhatsAppBot([
             'apiHost' => $_ENV['API_HOST'] ?? 'https://api.sdkwa.pro',

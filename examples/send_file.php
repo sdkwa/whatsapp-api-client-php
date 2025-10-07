@@ -53,7 +53,6 @@ try {
 
     echo "Uploaded file sent!" . PHP_EOL;
     echo "Message ID: " . $response['idMessage'] . PHP_EOL;
-
 } catch (WhatsAppApiException $e) {
     echo "WhatsApp API Error: " . $e->getMessage() . PHP_EOL;
     echo "Status Code: " . $e->getStatusCode() . PHP_EOL;

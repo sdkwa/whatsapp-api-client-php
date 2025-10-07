@@ -2,10 +2,10 @@
 
 /**
  * Webhook Endpoint Example
- * 
+ *
  * This file demonstrates how to create a webhook endpoint
  * to receive WhatsApp messages and events in real-time.
- * 
+ *
  * Usage:
  * 1. Deploy this file to a web server
  * 2. Configure your webhook URL in SDKWA settings
@@ -43,7 +43,7 @@ try {
     $webhookHandler = $client->getWebhookHandler();
 
     // Set up handlers for different message types
-    $webhookHandler->onIncomingMessageText(function($data) use ($client) {
+    $webhookHandler->onIncomingMessageText(function ($data) use ($client) {
         $senderId = $data['senderData']['sender'];
         $chatId = $data['senderData']['chatId'];
         $message = $data['messageData']['textMessageData']['textMessage'];
@@ -59,7 +59,7 @@ try {
                 'message' => 'Hello! Thanks for contacting us. How can I help you today?'
             ]);
         }
-        
+
         // Command handling example
         if (strtolower($message) === '/help') {
             $client->sendMessage([
@@ -67,14 +67,14 @@ try {
                 'message' => "Available commands:\n/help - Show this help\n/time - Get current time\n/status - Check bot status"
             ]);
         }
-        
+
         if (strtolower($message) === '/time') {
             $client->sendMessage([
                 'chatId' => $chatId,
                 'message' => 'Current time: ' . date('Y-m-d H:i:s T')
             ]);
         }
-        
+
         if (strtolower($message) === '/status') {
             $client->sendMessage([
                 'chatId' => $chatId,
@@ -86,7 +86,7 @@ try {
         // storeMessage($senderId, $chatId, $message, $timestamp);
     });
 
-    $webhookHandler->onIncomingMessageFile(function($data) use ($client) {
+    $webhookHandler->onIncomingMessageFile(function ($data) use ($client) {
         $senderId = $data['senderData']['sender'];
         $chatId = $data['senderData']['chatId'];
         $fileName = $data['messageData']['fileMessageData']['fileName'];
@@ -105,7 +105,7 @@ try {
         // downloadAndProcessFile($fileUrl, $fileName, $senderId);
     });
 
-    $webhookHandler->onIncomingMessageLocation(function($data) use ($client) {
+    $webhookHandler->onIncomingMessageLocation(function ($data) use ($client) {
         $senderId = $data['senderData']['sender'];
         $chatId = $data['senderData']['chatId'];
         $locationName = $data['messageData']['locationMessageData']['nameLocation'];
@@ -121,7 +121,7 @@ try {
         ]);
     });
 
-    $webhookHandler->onIncomingMessageContact(function($data) use ($client) {
+    $webhookHandler->onIncomingMessageContact(function ($data) use ($client) {
         $senderId = $data['senderData']['sender'];
         $chatId = $data['senderData']['chatId'];
         $contactName = $data['messageData']['contactMessageData']['displayName'];
@@ -134,7 +134,7 @@ try {
         ]);
     });
 
-    $webhookHandler->onOutgoingMessageStatus(function($data) {
+    $webhookHandler->onOutgoingMessageStatus(function ($data) {
         $messageId = $data['idMessage'];
         $status = $data['status'];
         $timestamp = $data['timestamp'];
@@ -145,9 +145,9 @@ try {
         // updateMessageStatus($messageId, $status, $timestamp);
     });
 
-    $webhookHandler->onStateInstance(function($data) {
+    $webhookHandler->onStateInstance(function ($data) {
         $state = $data['stateInstance'];
-        
+
         error_log("Instance state changed: {$state}");
 
         // Handle state changes
@@ -175,7 +175,6 @@ try {
     // Send success response
     http_response_code(200);
     echo json_encode(['status' => 'success']);
-
 } catch (WhatsAppApiException $e) {
     error_log("WhatsApp API Error: " . $e->getMessage());
     http_response_code(400);
@@ -188,17 +187,20 @@ try {
 
 // Example helper functions (implement as needed)
 
-function storeMessage($senderId, $chatId, $message, $timestamp) {
+function storeMessage($senderId, $chatId, $message, $timestamp)
+{
     // Store message in database
     // Example: INSERT INTO messages (sender_id, chat_id, message, timestamp) VALUES (?, ?, ?, ?)
 }
 
-function updateMessageStatus($messageId, $status, $timestamp) {
+function updateMessageStatus($messageId, $status, $timestamp)
+{
     // Update message status in database
     // Example: UPDATE messages SET status = ?, status_timestamp = ? WHERE id = ?
 }
 
-function downloadAndProcessFile($fileUrl, $fileName, $senderId) {
+function downloadAndProcessFile($fileUrl, $fileName, $senderId)
+{
     // Download and process file
     // Example:
     // $fileContent = file_get_contents($fileUrl);

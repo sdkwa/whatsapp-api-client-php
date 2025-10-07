@@ -47,7 +47,7 @@ try {
     // Check if a number has WhatsApp
     echo "Checking WhatsApp availability..." . PHP_EOL;
     $checkResponse = $client->checkWhatsapp(79999999999);
-    
+
     if ($checkResponse['existsWhatsapp']) {
         echo "✅ Phone number has WhatsApp" . PHP_EOL;
     } else {
@@ -66,7 +66,7 @@ try {
     // Get account avatar
     echo "Getting account avatar..." . PHP_EOL;
     $avatar = $client->getAvatar('79999999999@c.us');
-    
+
     if (isset($avatar['existsAvatar']) && $avatar['existsAvatar']) {
         echo "Avatar URL: " . $avatar['urlAvatar'] . PHP_EOL;
     } else {
@@ -107,7 +107,6 @@ try {
     echo "Getting warming status..." . PHP_EOL;
     $warmingStatus = $client->getWarmingPhoneStatus();
     echo "Warming status: " . json_encode($warmingStatus) . PHP_EOL;
-
 } catch (WhatsAppApiException $e) {
     echo "WhatsApp API Error: " . $e->getMessage() . PHP_EOL;
     echo "Status Code: " . $e->getStatusCode() . PHP_EOL;

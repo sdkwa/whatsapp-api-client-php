@@ -62,11 +62,9 @@ try {
         // Set group picture
         // $client->setGroupPicture($groupId, '/path/to/group-image.jpg');
         // echo "Group picture updated!" . PHP_EOL;
-
     } else {
         echo "Failed to create group" . PHP_EOL;
     }
-
 } catch (WhatsAppApiException $e) {
     echo "WhatsApp API Error: " . $e->getMessage() . PHP_EOL;
     echo "Status Code: " . $e->getStatusCode() . PHP_EOL;

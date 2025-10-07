@@ -22,7 +22,7 @@ try {
     $webhookHandler = $client->getWebhookHandler();
 
     // Register handlers for different webhook types
-    $webhookHandler->onIncomingMessageText(function($data) {
+    $webhookHandler->onIncomingMessageText(function ($data) {
         echo "📝 Received text message:" . PHP_EOL;
         echo "From: " . $data['senderData']['sender'] . PHP_EOL;
         echo "Message: " . $data['messageData']['textMessageData']['textMessage'] . PHP_EOL;
@@ -40,7 +40,7 @@ try {
         */
     });
 
-    $webhookHandler->onIncomingMessageFile(function($data) {
+    $webhookHandler->onIncomingMessageFile(function ($data) {
         echo "📎 Received file message:" . PHP_EOL;
         echo "From: " . $data['senderData']['sender'] . PHP_EOL;
         echo "File URL: " . $data['messageData']['fileMessageData']['downloadUrl'] . PHP_EOL;
@@ -49,7 +49,7 @@ try {
         echo "---" . PHP_EOL;
     });
 
-    $webhookHandler->onIncomingMessageLocation(function($data) {
+    $webhookHandler->onIncomingMessageLocation(function ($data) {
         echo "📍 Received location message:" . PHP_EOL;
         echo "From: " . $data['senderData']['sender'] . PHP_EOL;
         echo "Location: " . $data['messageData']['locationMessageData']['nameLocation'] . PHP_EOL;
@@ -58,7 +58,7 @@ try {
         echo "---" . PHP_EOL;
     });
 
-    $webhookHandler->onIncomingMessageContact(function($data) {
+    $webhookHandler->onIncomingMessageContact(function ($data) {
         echo "👤 Received contact message:" . PHP_EOL;
         echo "From: " . $data['senderData']['sender'] . PHP_EOL;
         echo "Contact: " . $data['messageData']['contactMessageData']['displayName'] . PHP_EOL;
@@ -66,7 +66,7 @@ try {
         echo "---" . PHP_EOL;
     });
 
-    $webhookHandler->onOutgoingMessageStatus(function($data) {
+    $webhookHandler->onOutgoingMessageStatus(function ($data) {
         echo "📤 Outgoing message status:" . PHP_EOL;
         echo "Message ID: " . $data['idMessage'] . PHP_EOL;
         echo "Status: " . $data['status'] . PHP_EOL;
@@ -74,7 +74,7 @@ try {
         echo "---" . PHP_EOL;
     });
 
-    $webhookHandler->onStateInstance(function($data) {
+    $webhookHandler->onStateInstance(function ($data) {
         echo "🔄 Instance state changed:" . PHP_EOL;
         echo "State: " . $data['stateInstance'] . PHP_EOL;
         echo "---" . PHP_EOL;
@@ -106,7 +106,7 @@ try {
 
     // Test webhook processing with sample data
     echo PHP_EOL . "Testing webhook with sample data..." . PHP_EOL;
-    
+
     $sampleWebhookData = [
         'typeWebhook' => 'incomingMessageReceived',
         'instanceData' => [
@@ -130,7 +130,6 @@ try {
     ];
 
     $webhookHandler->processWebhook($sampleWebhookData);
-
 } catch (WhatsAppApiException $e) {
     echo "WhatsApp API Error: " . $e->getMessage() . PHP_EOL;
     echo "Status Code: " . $e->getStatusCode() . PHP_EOL;

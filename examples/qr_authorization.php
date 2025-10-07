@@ -29,19 +29,18 @@ try {
 
         // Get QR code
         $qrResponse = $client->getQr();
-        
+
         if ($qrResponse['type'] === 'qrCode') {
             echo "QR Code (base64): " . substr($qrResponse['message'], 0, 50) . "..." . PHP_EOL;
             echo "Please scan this QR code with your WhatsApp app." . PHP_EOL;
             echo "You can decode the base64 string and display it as an image." . PHP_EOL;
-            
+
             // You can save the QR code to a file
             $qrData = $qrResponse['message'];
             // Remove data:image/png;base64, prefix if present
             $qrData = preg_replace('/^data:image\/png;base64,/', '', $qrData);
             file_put_contents('qr_code.png', base64_decode($qrData));
             echo "QR code saved as qr_code.png" . PHP_EOL;
-            
         } else {
             echo "QR Response: " . $qrResponse['message'] . PHP_EOL;
         }
@@ -51,7 +50,7 @@ try {
         echo "You can also authorize using getAuthorizationCode method:" . PHP_EOL;
         echo "1. Use 'Link device' -> 'Link with phone number' in WhatsApp" . PHP_EOL;
         echo "2. Call getAuthorizationCode with your phone number" . PHP_EOL;
-        
+
         /*
         $authResponse = $client->getAuthorizationCode([
             'phoneNumber' => 79999999999 // Your phone number
@@ -66,7 +65,7 @@ try {
         sleep(2);
         $state = $client->getStateInstance();
         echo "State check #" . ($i + 1) . ": " . $state['stateInstance'] . PHP_EOL;
-        
+
         if ($state['stateInstance'] === 'authorized') {
             echo "✅ Account is now authorized!" . PHP_EOL;
             break;
@@ -80,16 +79,15 @@ try {
         echo "Webhook URL: " . ($settings['webhookUrl'] ?? 'Not set') . PHP_EOL;
         echo "Outgoing webhook: " . ($settings['outgoingWebhook'] ?? 'Not set') . PHP_EOL;
         echo "Incoming webhook: " . ($settings['incomingWebhook'] ?? 'Not set') . PHP_EOL;
-        
+
         // Get contacts
         $contacts = $client->getContacts();
         echo "Total contacts: " . count($contacts) . PHP_EOL;
-        
+
         // Get chats
         $chats = $client->getChats();
         echo "Total chats: " . count($chats) . PHP_EOL;
     }
-
 } catch (WhatsAppApiException $e) {
     echo "WhatsApp API Error: " . $e->getMessage() . PHP_EOL;
     echo "Status Code: " . $e->getStatusCode() . PHP_EOL;
